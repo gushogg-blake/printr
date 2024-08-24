@@ -10,6 +10,8 @@ import Tabs from "$components/Tabs.svelte";
 import {default as LogComponent} from "$components/Log/Log.svelte";
 import Log from "./Log";
 
+console.log(import.meta.env);
+
 let log = new Log();
 
 setContext("log", log);
@@ -36,8 +38,9 @@ onMount(async function() {
 		localStorage.setItem("key", key);
 	}
 	
-	webSocket("wss://tmwuc.gushogg-blake.com:3789?key=" + key, {
+	webSocket(import.meta.env.VITE_WS_URL + "/ws/" + key, {
 		message({type, data}) {
+			console.log(type, data);
 			handlers[type](data);
 		},
 		

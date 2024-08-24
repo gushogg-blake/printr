@@ -1,10 +1,11 @@
 <script>
 import {onMount, setContext, getContext, createEventDispatcher, tick} from "svelte";
-import logs from "$stores/logs";
 import Rendered from "./Rendered.svelte";
 import Raw from "./Raw.svelte";
 
-export let type;
+let log = getContext("log");
+
+let type = "rendered";
 
 let renderers = {
 	rendered: Rendered,

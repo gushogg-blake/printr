@@ -121,26 +121,26 @@ onMount(function() {
 </style>
 
 <div id="main">
-	{#each logs as entry (entry)}
-		{#if log.isNewline}
+	{#each entries as entry (entry)}
+		{#if entry.isNewline}
 			<div
 				class="log newline"
-				style={inlineStyle(newlineStyle(log), customStyles(log, styleFunction))}
+				style={inlineStyle(newlineStyle(entry))}
 			></div>
 		{:else}
 			<div
-				class="log"
-				title={log.headers ? JSON.stringify(log.headers, null, 4) : ""}
+				class="entry"
+				title={entry.headers ? JSON.stringify(log.headers, null, 4) : ""}
 			>
 				<div class="controlsAnchor">
 					<div class="controls">
 						<a
 							href="javascript:void(0)"
-							on:click={() => toggleWrap(log)}
+							on:click={() => toggleWrap(entry)}
 						>Toggle wrap</a>
 						<a
 							href="javascript:void(0)"
-							on:click={() => removeLog(log)}
+							on:click={() => removeEntry(entry)}
 						>Remove</a>
 					</div>
 				</div>
@@ -148,7 +148,7 @@ onMount(function() {
 					<div class="data">
 						{render(entry)}
 					</div>
-					{log.date.toLocaleString()}
+					{entry.date.toLocaleString()}
 				</div>
 			</div>
 		{/if}

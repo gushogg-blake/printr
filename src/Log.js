@@ -2,6 +2,8 @@ import Evented from "$utils/Evented";
 
 class Log extends Evented {
 	constructor() {
+		super();
+		
 		this.entries = [];
 	}
 	

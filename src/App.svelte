@@ -5,8 +5,9 @@ import {push, remove} from "$utils/arrayMethods";
 import wrap from "$utils/wrap";
 import webSocket from "$utils/webSocket";
 import inlineStyle from "$utils/dom/inlineStyle";
-import logs from "$stores/logs";
 import langTabs from "$components/langTabs";
+import Tabs from "$components/Tabs.svelte";
+import {default as LogComponent} from "$components/Log/Log.svelte";
 import Log from "./Log";
 
 let log = new Log();
@@ -138,10 +139,8 @@ p, li {
 <div id="main">
 	<div id="intro">
 		<h1>Tell Me What You See</h1>
-		<h2>The quickest and dirtiest logging function there is</h2>
-		<p> tmwuc is for when you'find yourself staring at some unfamiliar code and thinking "just tell me what you see".
-		<p> As has become a bit of a theme in my software development practice: there are better ways, but this one is easier.
-		<p> Surprisingly often I have found myself without an easy and fast way to make some code tell me what it sees. For example:
+		<!--<h2>Quick and dirty logging for any language and environment</h2>-->
+		<p> Quick and dirty logging for when <code>print()</code> isn't available; for example:
 		<ul>
 			<li>
 				It's a Python server wrapped in a Windows executable and for some reason stdout isn't directed to the `cmd` window you started it from. Maybe there's a logging mixin available, but the broken code is in a utility function. You could figure out how to pass the logger into the util, or make the util return the interesting data before it throws the error, but that would take time and energy and you're already sidetracked.
@@ -166,70 +165,8 @@ p, li {
 		</div>
 	</div>
 	<div id="logAnchor">
-		<div id="log" bind:this={logsDiv}>
-			{#if $settings.raw}
-				<div class="data">
-					{#each logs as log (log)}
-						{render(log)}
-						{"\n"}
-					{/each}
-				</div>
-			{:else}
-				
-			{/if}
+		<div id="log">
+			<LogComponent/>
 		</div>
-	</div>
-	<div id="info" class:new={!visited}>
-		<div class="bar">
-			<div>
-				{#if !connected}
-				<div id="connection">
-					<div id="indicator" class:connected></div>
-					Connecting...
-					</div>
-				{/if}
-				POST something to
-				<code>{postUrl}</code> to see it here.
-				{#if isPublic}
-					|
-					Connected clients: {connectedClients}
-				{/if}
-				<!--(<a
-					href="javascript:void(0)"
-					on:click={showReadme}
-				>How?</a>)-->
-			</div>
-			<div>
-				<a
-					href="javascript:void(0)"
-					on:click={showReadme}
-				>Readme</a>
-				|
-				<a
-					href="javascript:void(0)"
-					on:click={showSettings}
-				>Settings</a>
-				|
-				<a
-					href="javascript:void(0)"
-					on:click={showAbout}
-				>About</a>
-			</div>
-		</div>
-		<!--<div class="bar">
-			<div>
-				{#if isPublic}
-					Viewing logs at <code>{key}</code>.  Connected clients: {connectedClients}
-				{:else}
-					Viewing logs at <code>{key}</code> from <code>{ip}</code>.
-				{/if}
-			</div>
-			<div>
-				<a
-					href="javascript:void(0)"
-					on:click={showSettings}
-				>Settings</a>
-			</div>
-		</div>-->
 	</div>
 </div>

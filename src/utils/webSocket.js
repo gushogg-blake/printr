@@ -44,7 +44,7 @@ export default function(url, handlers) {
 		try {
 			socket.send("test");
 		} catch (e) {
-			reconnect();
+			createSocket();
 		}
 	}
 	

@@ -15,6 +15,7 @@ export default defineConfig({
 			"$modules": resolve(__dirname, "src/modules"),
 			"$assets": resolve(__dirname, "src/assets"),
 			"$components": resolve(__dirname, "src/components"),
+			"$stores": resolve(__dirname, "src/stores"),
 		},
 	},
 });

@@ -1,19 +1,17 @@
 <script>
-import {onMount, tick} from "svelte";
+import {onMount, tick, setContext} from "svelte";
 import sleep from "$utils/sleep";
 import {push, remove} from "$utils/arrayMethods";
 import wrap from "$utils/wrap";
-import untab from "$utils/untab";
 import webSocket from "$utils/webSocket";
 import inlineStyle from "$utils/dom/inlineStyle";
-import Checkbox from "$components/Checkbox.svelte";
-import Editor from "$components/Editor.svelte";
+import logs from "$stores/logs";
+import langTabs from "$components/langTabs";
+import Log from "./Log";
 
-let connected = false;
-let key = null;
-let logs = [];
+let log = new Log();
 
-let logsDiv;
+setContext("log", log);
 
 //logs = push(logs, {
 //	date: new Date(),
@@ -26,104 +24,23 @@ let logsDiv;
 //	},
 //});
 
-function isScrolledToBottom(el) {
-	let {scrollHeight, scrollTop, offsetHeight} = el;
-	
-	return Math.abs(scrollTop + offsetHeight - scrollHeight) < 20;
-}
-
-let handlers = {
-	key({data}) {
-		key = data;
-	},
-	
-	async log({data, isJson, headers}) {
-		let scrolledToBottom = isScrolledToBottom(logsDiv);
-		
-		logs = push(logs, {
-			date: new Date(),
-			data,
-			isJson,
-			headers,
-			wrap: true,
-		});
-		
-		await tick();
-		
-		if (scrolledToBottom) {
-			logsDiv.scrollTop = logsDiv.scrollHeight;
-		}
-	},
-};
-
-function toggleWrap(log) {
-	log.wrap = !log.wrap;
-	
-	logs = logs;
-}
-
-function removeLog(log) {
-	logs = remove(logs, log);
-}
-
-function render(log, raw) {
-	if (log.isNewline) {
-		return "\n";
-	}
-	
-	let str = log.isJson ? JSON.stringify(log.data, null, 4) : log.data;
-	
-	if (log.wrap && !raw) {
-		let maxLength = 120;
-		
-		str = str.split("\n").map(function(line) {
-			if (line.length > maxLength) {
-				return wrap(line, maxLength);
-			} else {
-				return line;
-			}
-		}).join("\n");
-	}
-	
-	return str;
-}
-
-async function bodyKeydown(e) {
-	if (e.key === "Enter") {
-		let log = logs[logs.length - 1];
-		
-		if (log && log.isNewline) {
-			log.height++;
-			
-			logs = logs;
-		} else {
-			logs = push(logs, {
-				isNewline: true,
-				height: 1,
-			});
-		}
-		
-		await tick();
-		
-		logsDiv.scrollTop = logsDiv.scrollHeight;
-	}
-}
-
-function newlineStyle(log) {
-	return {
-		height: log.height + "em",
-	};
-}
+let connected = false;
 
 onMount(async function() {
-	webSocket(wsConfig, {
+	let key = localStorage.getItem("key");
+	
+	if (!key) {
+		key = crypto.randomUUID();
+		
+		localStorage.setItem("key", key);
+	}
+	
+	webSocket("wss://tmwuc.gushogg-blake.com:3789?key=" + key, {
 		message({type, data}) {
 			handlers[type](data);
 		},
 		
 		async connected() {
-			await sleep(100);
-			
 			connected = true;
 		},
 		
@@ -131,8 +48,6 @@ onMount(async function() {
 			connected = false;
 		},
 	});
-	
-	//Prism.highlightAllUnder(document.body);
 });
 </script>
 
@@ -141,7 +56,7 @@ onMount(async function() {
 </svelte:head>
 
 <style lang="scss">
-@import "../css/mixins/abs-sticky";
+@import "$css/mixins/abs-sticky";
 
 a {
 	color: #0E4D87;
@@ -162,64 +77,6 @@ a {
 	@include abs-sticky;
 	
 	overflow: auto;
-}
-
-.log {
-	--containerPadding: .4em;
-	--spacing: .5em;
-	--separatorBorder: 1px solid #afafaf;
-	
-	color: #202020;
-	margin: 0 var(--containerPadding);
-	padding: .5em 0 1em;
-	background: white;
-	
-	&:first-child {
-		margin-top: var(--containerPadding);
-	}
-	
-	&.newline, &:not(:last-child) {
-		margin-bottom: var(--spacing);
-		border-bottom: var(--separatorBorder);
-	}
-	
-	&:last-child {
-		margin-bottom: var(--containerPadding);
-	}
-}
-
-.controlsAnchor {
-	position: relative;
-}
-
-.controls {
-	font-size: var(--controlsFontSize, .9em);
-	position: absolute;
-	top: 0;
-	right: 0;
-	display: none;
-	
-	.log:hover & {
-		display: var(--controlsDisplay, block);
-	}
-	
-	a {
-		color: var(--linkColor, #0E4D87);
-	}
-}
-
-.date {
-	font-size: var(--dateFontSize, .8em);
-	color: var(--dateColor, #505050);
-	display: var(--dateDisplay, block);
-	margin-bottom: var(--dateMarginBottom, 1em);
-}
-
-.data {
-	font-family: var(--dataFontFamily, "DejaVu Sans Mono", monospace);
-	font-size: var(--dataFontSize, 14px);
-	white-space: var(--dataWhiteSpace, pre);
-	tab-size: var(--dataTabSize, 4);
 }
 
 pre {
@@ -257,27 +114,6 @@ p, li {
 	}
 }
 
-.bar {
-	font-family: "DejaVu Sans Mono", monospace;
-	font-size: 14px;
-	color: #6B6B6B;
-	display: flex;
-	justify-content: space-between;
-	
-	> div:first-child {
-		margin-right: 1em;
-	}
-	
-	> div:last-child {
-		text-align: right;
-	}
-	
-	code {
-		/*font-family: sans-serif;*/
-		color: #383838;
-	}
-}
-
 #connection {
 	display: inline-flex;
 	align-items: center;
@@ -298,8 +134,6 @@ p, li {
 	}
 }
 </style>
-
-<svelte:body on:keydown={bodyKeydown}/>
 
 <div id="main">
 	<div id="intro">
@@ -341,38 +175,7 @@ p, li {
 					{/each}
 				</div>
 			{:else}
-				{#each logs as log (log)}
-					{#if log.isNewline}
-						<div
-							class="log newline"
-							style={inlineStyle(newlineStyle(log), customStyles(log, styleFunction))}
-						></div>
-					{:else}
-						<div
-							class="log"
-							title={JSON.stringify(log.headers, null, 4)}
-						>
-							<div class="controlsAnchor">
-								<div class="controls">
-									<a
-										href="javascript:void(0)"
-										on:click={() => toggleWrap(log)}
-									>Toggle wrap</a>
-									<a
-										href="javascript:void(0)"
-										on:click={() => removeLog(log)}
-									>Remove</a>
-								</div>
-							</div>
-							<div class="date">
-								<div class="data">
-									{render(log)}
-								</div>
-								{log.date.toLocaleString()}
-							</div>
-						</div>
-					{/if}
-				{/each}
+				
 			{/if}
 		</div>
 	</div>
@@ -430,29 +233,3 @@ p, li {
 		</div>-->
 	</div>
 </div>
-
-<Modal bind:this={settingsModal}>
-	<h1>Settings</h1>
-	<h2>Appearance</h2>
-	<Checkbox
-		css={inputRow}
-		label="Wrap long lines by default"
-		bind:value={$settings.wrap}
-	/>
-	<Input
-		css={inputRow}
-		label="Max. line length"
-		bind:value={$settings.maxLineLength}
-	/>
-	<Editor
-		css={inputRow}
-		lines={15}
-		label="Styles"
-		bind:value={$settings.styleFunction}
-	/>
-	<Checkbox
-		css={inputRow}
-		label="Raw"
-		bind:value={$settings.raw}
-	/>
-</Modal>

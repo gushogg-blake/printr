@@ -1,5 +1,7 @@
 <script>
 import {onMount, setContext, getContext, createEventDispatcher, tick} from "svelte";
+import inlineStyle from "$utils/dom/inlineStyle";
+import render from "./render";
 
 let log = getContext("log");
 
@@ -17,28 +19,6 @@ function toggleWrap(entry) {
 
 function removeEntry(entry) {
 	log.remove(entry);
-}
-
-function render(entry) {
-	if (entry.isNewline) {
-		return "\n";
-	}
-	
-	let str = entry.isJson ? JSON.stringify(entry.data, null, 4) : entry.data;
-	
-	if (entry.wrap) {
-		let maxLength = 120;
-		
-		str = str.split("\n").map(function(line) {
-			if (line.length > maxLength) {
-				return wrap(line, maxLength);
-			} else {
-				return line;
-			}
-		}).join("\n");
-	}
-	
-	return str;
 }
 
 function onUpdate() {
@@ -130,7 +110,7 @@ onMount(function() {
 		{:else}
 			<div
 				class="entry"
-				title={entry.headers ? JSON.stringify(log.headers, null, 4) : ""}
+				title={entry.headers ? JSON.stringify(entry.headers, null, 4) : ""}
 			>
 				<div class="controlsAnchor">
 					<div class="controls">
@@ -145,10 +125,13 @@ onMount(function() {
 					</div>
 				</div>
 				<div class="date">
-					<div class="data">
-						{render(entry)}
-					</div>
 					{entry.date.toLocaleString()}
+					{#if entry.isManual}
+						(manual insertion)
+					{/if}
+				</div>
+				<div class="data">
+					{render(entry)}
 				</div>
 			</div>
 		{/if}

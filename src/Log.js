@@ -1,4 +1,5 @@
 import Evented from "$utils/Evented";
+import {removeInPlace} from "$utils/arrayMethods";
 
 class Log extends Evented {
 	constructor() {
@@ -27,6 +28,8 @@ class Log extends Evented {
 		this.entries.push({
 			isManual: true,
 			data: str,
+			date: new Date(),
+			wrap: true,
 		});
 		
 		this.fire("update");
@@ -34,16 +37,26 @@ class Log extends Evented {
 	}
 	
 	receiveEntry(entry) {
-		this.entries.push(entry);
+		this.entries.push({
+			...entry,
+			date: new Date(),
+			wrap: true,
+		});
 		
 		this.fire("update");
 		this.fire("entryReceived");
 	}
 	
 	remove(entry) {
+		removeInPlace(this.entries, entry);
+		
+		this.fire("update");
 	}
 	
 	toggleWrap(entry) {
+		entry.wrap = !entry.wrap;
+		
+		this.fire("update");
 	}
 }
 

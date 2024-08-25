@@ -6,7 +6,7 @@ let key = getContext("key");
 let postUrl = getContext("postUrl");
 
 let code = dedent(`
-	$tmwucUrl = "https://tmwuc.gushogg-blake.com/print/99d3ffe8-fbf2-4232-8b12-38be22a5f396";
+	$tmwucUrl = "${postUrl}";
 	
 	function tmwuc($data) {
 		global $tmwucUrl;
@@ -62,4 +62,4 @@ let code = dedent(`
 
 </style>
 
-<pre class="language-php"><code>{@html code}</code></pre>
+<pre class="language-php"><code>{code}</code></pre>

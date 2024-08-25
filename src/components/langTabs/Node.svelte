@@ -27,4 +27,4 @@ let code = dedent(`
 
 </style>
 
-<pre class="language-javascript"><code>{@html code}</code></pre>
+<pre class="language-javascript"><code>{code}</code></pre>

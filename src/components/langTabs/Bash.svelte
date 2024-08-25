@@ -20,4 +20,4 @@ let code = dedent(`
 
 </style>
 
-<pre class="language-bash"><code>{@html code}</code></pre>
+<pre class="language-bash"><code>{code}</code></pre>

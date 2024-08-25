@@ -8,7 +8,7 @@ let postUrl = getContext("postUrl");
 let code = dedent(`
 	// useful for e.g. phones
 	
-	function tmwuc(data, path="/") {
+	function tmwuc(data) {
 		return fetch("${postUrl}", {
 			method: "POST",
 			headers: {

@@ -103,7 +103,7 @@ h1, h2, h3 {
 			</p>
 			<br>
 			<!--<h2>Quick and dirty logging for any language and environment</h2>-->
-			<p> Quick and dirty logging for when <code>print()</code> isn't available in the current context and you just want to make some code "tell you what it sees".
+			<p> Quick and dirty logging for when <code>print()</code> isn't available in the current context and you just want to make some code "tell you what it sees", without getting further distracted looking into a codebase or environment you may not be familiar with.
 			<p> For example:
 			<ul>
 				<li>

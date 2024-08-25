@@ -6,7 +6,7 @@ let key = getContext("key");
 let postUrl = getContext("postUrl");
 
 let code = dedent(`
-	function tmwuc(data, path="/") {
+	function tmwuc(data) {
 		let curl = require("child_process").spawn("curl", [
 			"-H", "Content-Type: application/json",
 			"--data-binary", "@-",

@@ -12,8 +12,8 @@ let code = dedent(`
 		global $tmwucUrl;
 		$isScalar = is_scalar($data);
 		$contentType = $isScalar ? "text/plain" : "application/json";
-		echo "curl -H \"Content-Type: $contentType\" --data-binary @- $tmwucUrl", "w";
-		$curl = popen("curl -H \"Content-Type: $contentType\" --data-binary @- $tmwucUrl", "w");
+		echo "curl -H \\"Content-Type: $contentType\\" --data-binary @- $tmwucUrl", "w";
+		$curl = popen("curl -H \\"Content-Type: $contentType\\" --data-binary @- $tmwucUrl", "w");
 		fwrite($curl, $isScalar ? $data : json_encode($data));
 		fclose($curl);
 	}
@@ -50,7 +50,7 @@ let code = dedent(`
 	}
 	
 	function tmwuc_exception_handler($e) {
-		tmwuc($e->getMessage() . "\n\n" . $e->getTraceAsString());
+		tmwuc($e->getMessage() . "\\n\\n" . $e->getTraceAsString());
 	}
 	
 	set_error_handler("tmwuc_error_handler");

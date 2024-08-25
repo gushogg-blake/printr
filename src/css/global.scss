@@ -14,3 +14,17 @@ h1 {
 	font-size: 3.2em;
 	line-height: 1.1;
 }
+
+pre {
+	/*max-height: 9em;*/
+	margin: 0 !important;
+	overflow: initial !important;
+}
+
+:not(pre) > code {
+	font-size: 1.1em;
+	border: 1px solid #9da5a9;
+	border-radius: 3px;
+	padding: 3px 4px 2px;
+	background: #ffffff;
+}

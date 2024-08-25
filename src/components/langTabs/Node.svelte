@@ -1,18 +1,30 @@
 <script>
 import {onMount, setContext, getContext, createEventDispatcher, tick} from "svelte";
+import dedent from "$utils/dedent";
 
+let key = getContext("key");
+let postUrl = getContext("postUrl");
 
+let code = dedent(`
+	function tmwuc(data, path="/") {
+		let curl = require("child_process").spawn("curl", [
+			"-H", "Content-Type: application/json",
+			"--data-binary", "@-",
+			"${postUrl}",
+		], {
+			stdio: ["pipe", "inherit", "inherit"],
+		});
+		
+		curl.stdin.write(JSON.stringify(data));
+		curl.stdin.end();
+	}
+	
+	tmwuc({test: 123});
+`);
 </script>
 
 <style lang="scss">
 
-pre {
-	/*max-height: 9em;*/
-	border: 1px solid lightgray;
-	border-radius: 1px;
-	padding: 1em;
-	overflow-x: auto;
-}
-
 </style>
 
+<pre class="language-javascript"><code>{@html code}</code></pre>

@@ -5,14 +5,26 @@ import {push, remove} from "$utils/arrayMethods";
 import wrap from "$utils/wrap";
 import webSocket from "$utils/webSocket";
 import inlineStyle from "$utils/dom/inlineStyle";
-import langTabs from "$components/langTabs";
-import Tabs from "$components/Tabs.svelte";
+import LangTabs from "$components/LangTabs.svelte";
 import {default as LogComponent} from "$components/Log/Log.svelte";
 import Log from "./Log";
 
 let log = new Log();
 
 setContext("log", log);
+
+let key = localStorage.getItem("key");
+
+if (!key) {
+	key = crypto.randomUUID();
+	
+	localStorage.setItem("key", key);
+}
+
+let postUrl = `https://tmwuc.gushogg-blake.com/print/${key}`;
+
+setContext("key", key);
+setContext("postUrl", postUrl);
 
 let connected = false;
 
@@ -23,14 +35,6 @@ let handlers = {
 };
 
 onMount(async function() {
-	let key = localStorage.getItem("key");
-	
-	if (!key) {
-		key = crypto.randomUUID();
-		
-		localStorage.setItem("key", key);
-	}
-	
 	webSocket(import.meta.env.VITE_WS_URL + "/ws/" + key, {
 		message({type, data}) {
 			handlers[type](data);
@@ -59,9 +63,15 @@ a {
 }
 
 #wrapper {
+	--boldBorder: 1px solid #a0a3a5;
+	--boldBorderRadius: 4px;
+	
 	min-height: 100vh;
 	padding: 1em;
 	background: #d9d9d9;
+	background: #d2d5d7;
+	background: #596268;
+	background: #3b86b3;
 }
 
 #main {
@@ -71,15 +81,12 @@ a {
 	padding: 1em;
 	
 	background: #e8e8e8;
+	background: #dde1e3;
+	background: #e3ebef;
 }
 
 h1, h2, h3 {
 	color: #3F3F3F;
-}
-
-code {
-	padding: 2px;
-	background: #eaeaea;
 }
 
 h1, h2, h3 {
@@ -91,15 +98,20 @@ h1, h2, h3 {
 	<div id="main">
 		<div id="intro">
 			<h1>Tell Me What You See</h1>
+			<p align=center>
+				A side project by <a href="//gushogg-blake.com">Gus Hogg-Blake</a>.
+			</p>
+			<br>
 			<!--<h2>Quick and dirty logging for any language and environment</h2>-->
-			<p> Quick and dirty logging for when <code>print()</code> isn't available; for example:
+			<p> Quick and dirty logging for when <code>print()</code> isn't available in the current context and you just want to make some code "tell you what it sees".
+			<p> For example:
 			<ul>
 				<li>
-					It's a Python server wrapped in a Windows executable and for some reason stdout isn't directed to the command window you started it from. Maybe there's a logging mixin available, but the broken code is in a utility function. You could figure out how to pass the logger into the util, or make the util return the interesting data before it throws the error, but that would take time and energy and you're already sidetracked.
+					It's in a Python server wrapped in a Windows executable, and for some reason stdout isn't directed to the command window you started it from.
 					<br><br>
 				</li>
 				<li>
-					It's in the cloud and the guy who does the cloud is off today; you only know how to push the deploy button.
+					It's in the cloud and the person who does the cloud is off today; you only know how to push the deploy button.
 					<br><br>
 				</li>
 				<li>
@@ -108,19 +120,43 @@ h1, h2, h3 {
 				</li>
 			</ul>
 		</div>
+		<h2>Usage</h2>
+		<p> 1. Update code to send a POST request to <code>{postUrl}</code>.
+		<p> You can use your own code or one of the snippets below.
 		<div id="langs">
-			<div class="step">
-				1. Place self-contained logging snippet in code.
-			</div>
-			<Tabs tabs={langTabs}/>
+			<LangTabs/>
 		</div>
 		<div id="logs">
 			<div class="step">
-				2. Run code. Logs appear below.
+				<p> 2. Run code. Logs appear below.
 			</div>
 		</div>
 		<div id="log">
 			<LogComponent/>
 		</div>
+		<h2>How it works</h2>
+		<p> When you load this page, the frontend generates a local UUID, stores it in <code>localStorage</code>, and uses it to connect to a WebSocket relay server.
+		<p> The WebSocket relay server listens for POST requests at <code>/print/[uuid]</code> and relays log entries to all clients connected with that UUID.
+		<p> Logs are not stored anywhere; reloading the page clears the log.
+		<p> To separate out logs within a session for clarity, you can press Enter or optionally write a message in the input box below the log.
+		<h2>Security</h2>
+		<ul>
+			<li>
+				Anyone with the UUID can listen to the logs.
+				<br><br>
+			</li>
+			<li>
+				The WebSocket relay uses TLS in both directions, but messages are not E2E encrypted, so use your judgment on what to send. (I don't intentionally store logs anywhere or do anything with them, but maybe my stack is compromised in some way.)
+			</li>
+		</ul>
+		<h2>Source</h2>
+		<ul>
+			<li>
+				<a href="//gitlab.com/gushogg-blake/tmwuc">Frontend</a>
+			</li>
+			<li>
+				<a href="//gitlab.com/gushogg-blake/relay">WebSocket relay</a>
+			</li>
+		</ul>
 	</div>
 </div>

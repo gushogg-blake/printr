@@ -75,8 +75,8 @@ onMount(function() {
 	position: relative;
 	height: 40em;
 	
-	border: 1px solid #505050;
-	border-radius: 4px;
+	border: var(--boldBorder);
+	border-radius: var(--boldBorderRadius);
 	background: white;
 }
 
@@ -114,7 +114,7 @@ input[type="text"] {
 		</div>
 	</div>
 	<div id="input">
-		<input type="text" placeholder="Add notes or separators" autofocus on:keydown={onKeydown}/>
+		<input type="text" placeholder="Add notes or separators" on:keydown={onKeydown}/>
 		<div class="spacer"></div>
 		<div id="prefs">
 			<label>

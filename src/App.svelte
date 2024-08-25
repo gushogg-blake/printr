@@ -10,22 +10,9 @@ import Tabs from "$components/Tabs.svelte";
 import {default as LogComponent} from "$components/Log/Log.svelte";
 import Log from "./Log";
 
-console.log(import.meta.env);
-
 let log = new Log();
 
 setContext("log", log);
-
-//logs = push(logs, {
-//	date: new Date(),
-//	isJson: true,
-//	data: {
-//		test: "lorem ipsum dolor sit ametlorem ipsum dolor sit ametlorem ipsum dolor sit ametlorem ipsum dolor sit ametlorem ipsum dolor sit ametlorem ipsum dolor sit ametlorem ipsum dolor sit ametlorem ipsum dolor sit amet",
-//	},
-//	headers: {
-//		"x-test": 123,
-//	},
-//});
 
 let connected = false;
 
@@ -108,13 +95,16 @@ h1, h2, h3 {
 			<p> Quick and dirty logging for when <code>print()</code> isn't available; for example:
 			<ul>
 				<li>
-					It's a Python server wrapped in a Windows executable and for some reason stdout isn't directed to the `cmd` window you started it from. Maybe there's a logging mixin available, but the broken code is in a utility function. You could figure out how to pass the logger into the util, or make the util return the interesting data before it throws the error, but that would take time and energy and you're already sidetracked.
+					It's a Python server wrapped in a Windows executable and for some reason stdout isn't directed to the command window you started it from. Maybe there's a logging mixin available, but the broken code is in a utility function. You could figure out how to pass the logger into the util, or make the util return the interesting data before it throws the error, but that would take time and energy and you're already sidetracked.
+					<br><br>
 				</li>
 				<li>
 					It's in the cloud and the guy who does the cloud is off today; you only know how to push the deploy button.
+					<br><br>
 				</li>
 				<li>
 					It's in a PHP API and you can't be bothered to figure out 1) how you get PHP to pretty-print stuff again; 2) where the webserver logs are; and then 3) to make sense of logs that are either all on one line, or multi-line logs where every line has a massive prefix of irrelevant fields.
+					<!--<br><br>-->
 				</li>
 			</ul>
 		</div>

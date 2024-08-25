@@ -6,12 +6,14 @@ let key = getContext("key");
 let postUrl = getContext("postUrl");
 
 let code = dedent(`
-	$tmwucUrl = "${postUrl}";
+	$tmwucUrl = "https://tmwuc.gushogg-blake.com/print/99d3ffe8-fbf2-4232-8b12-38be22a5f396";
 	
 	function tmwuc($data) {
+		global $tmwucUrl;
 		$isScalar = is_scalar($data);
 		$contentType = $isScalar ? "text/plain" : "application/json";
-		$curl = popen("curl -H \\"Content-Type: $contentType\\" --data-binary @- $tmwucUrl", "w");
+		echo "curl -H \"Content-Type: $contentType\" --data-binary @- $tmwucUrl", "w";
+		$curl = popen("curl -H \"Content-Type: $contentType\" --data-binary @- $tmwucUrl", "w");
 		fwrite($curl, $isScalar ? $data : json_encode($data));
 		fclose($curl);
 	}
@@ -21,10 +23,10 @@ let code = dedent(`
 	// debug_backtrace() output isn't always serialisable, so use this for traces:
 	
 	function tmwuc_trace($e=null) {
+		global $tmwucUrl;
 		if (!$e) {
 			$e = new Exception;
 		}
-	
 		$curl = popen("curl --data-binary @- $tmwucUrl", "w");
 		fwrite($curl, $e->getTraceAsString());
 		fclose($curl);
@@ -37,7 +39,6 @@ let code = dedent(`
 		if (!(error_reporting() & $errNo)) {
 			return;
 		}
-	
 		tmwuc([
 			"message" => $message,
 			"errNo" => $errNo,
@@ -49,7 +50,7 @@ let code = dedent(`
 	}
 	
 	function tmwuc_exception_handler($e) {
-		tmwuc($e->getMessage() . "\\n\\n" . $e->getTraceAsString());
+		tmwuc($e->getMessage() . "\n\n" . $e->getTraceAsString());
 	}
 	
 	set_error_handler("tmwuc_error_handler");

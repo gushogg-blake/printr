@@ -15,8 +15,10 @@ let renderers = {
 };
 
 let connected = false;
+let entries = log.entries;
 
 let scroller;
+let wasScrolledToBottomOnLastUpdate;
 
 function isScrolledToBottom() {
 	let {scrollHeight, scrollTop, offsetHeight} = scroller;
@@ -42,14 +44,32 @@ function onKeydown(e) {
 	}
 }
 
-function onEntryReceived(entry) {
-	// ...
+async function onEntryReceived(entry) {
+	await tick();
+	
+	if (wasScrolledToBottomOnLastUpdate) {
+		scroll();
+	}
+}
+
+async function onSystemMessageReceived() {
+	await tick();
+	
+	if (wasScrolledToBottomOnLastUpdate) {
+		scroll();
+	}
 }
 
 async function onManualEntry() {
 	await tick();
 	
 	scroll();
+}
+
+function onUpdate() {
+	wasScrolledToBottomOnLastUpdate = isScrolledToBottom(scroller);
+	
+	entries = log.entries;
 }
 
 let handlers = {
@@ -61,8 +81,9 @@ let handlers = {
 onMount(function() {
 	let teardown = [
 		log.on("entryReceived", onEntryReceived),
+		log.on("systemMessageReceived", onSystemMessageReceived),
 		log.on("manualEntry", onManualEntry),
-		//log.on("update", onUpdate),
+		log.on("update", onUpdate),
 	];
 	
 	let wsUrl = import.meta.env.VITE_WS_URL + "/ws/" + key;
@@ -79,9 +100,11 @@ onMount(function() {
 		},
 		
 		disconnected() {
-			connected = false;
+			if (connected) {
+				log.system("Connection lost.");
+			}
 			
-			log.system("Connection lost.");
+			connected = false;
 		},
 	});
 	
@@ -117,7 +140,6 @@ onMount(function() {
 #input {
 	display: flex;
 	align-items: center;
-	//justify-content: space-between;
 	margin-top: 3px;
 }
 
@@ -127,7 +149,6 @@ input[type="text"] {
 	border: 1px solid #606060;
 	border-radius: 4px;
 	padding: .5em;
-	
 }
 
 .spacer {
@@ -161,7 +182,7 @@ input[type="text"] {
 <div id="main">
 	<div id="log">
 		<div id="scroller" bind:this={scroller}>
-			<svelte:component this={renderers[type]}/>
+			<svelte:component this={renderers[type]} {entries}/>
 		</div>
 	</div>
 	<div id="input">

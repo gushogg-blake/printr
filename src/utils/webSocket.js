@@ -1,12 +1,20 @@
 export default function(url, handlers) {
 	let socket;
 	
+	let retryTimer;
+	
 	function disconnectHandler() {
 		if (handlers.disconnected) {
 			handlers.disconnected();
 		}
 		
-		createSocket();
+		if (!retryTimer) {
+			retryTimer = setTimeout(function() {
+				retryTimer = null;
+				
+				createSocket();
+			}, 1000);
+		}
 	}
 	
 	function messageHandler(message) {

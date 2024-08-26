@@ -3,9 +3,9 @@ import {onMount, setContext, getContext, createEventDispatcher, tick} from "svel
 import inlineStyle from "$utils/dom/inlineStyle";
 import render from "./render";
 
-let log = getContext("log");
+export let entries;
 
-let {entries} = log;
+let log = getContext("log");
 
 function newlineStyle(entry) {
 	return {
@@ -20,24 +20,6 @@ function toggleWrap(entry) {
 function removeEntry(entry) {
 	log.remove(entry);
 }
-
-function onUpdate() {
-	entries = log.entries;
-}
-
-onMount(function() {
-	let teardown = [
-		log.on("update", onUpdate),
-	];
-	
-	
-	
-	return function() {
-		for (let fn of teardown) {
-			fn();
-		}
-	}
-});
 </script>
 
 <style lang="scss">

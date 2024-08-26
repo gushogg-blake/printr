@@ -2,27 +2,9 @@
 import {onMount, setContext, getContext, createEventDispatcher, tick} from "svelte";
 import render from "./render";
 
+export let entries;
+
 let log = getContext("log");
-
-let {entries} = log;
-
-function onUpdate() {
-	entries = log.entries;
-}
-
-onMount(function() {
-	let teardown = [
-		log.on("update", onUpdate),
-	];
-	
-	
-	
-	return function() {
-		for (let fn of teardown) {
-			fn();
-		}
-	}
-});
 </script>
 
 <style lang="scss">

@@ -1,5 +1,6 @@
 <script>
 import {onMount, setContext, getContext, createEventDispatcher, tick} from "svelte";
+import webSocket from "$utils/webSocket";
 import Rendered from "./Rendered.svelte";
 import Raw from "./Raw.svelte";
 
@@ -127,9 +128,11 @@ input[type="text"] {
 }
 
 #connection {
+	font-size: .9em;
+	color: #444444;
 	display: inline-flex;
 	align-items: center;
-	margin-left: 1em;
+	margin-left: .7em;
 }
 
 #indicator {

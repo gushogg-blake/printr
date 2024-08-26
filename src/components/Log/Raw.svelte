@@ -20,7 +20,7 @@ let log = getContext("log");
 </style>
 
 <div id="main">
-	{#each entries as entry (entry)}
+	{#each entries.filter(entry => entry.type !== "system") as entry (entry)}
 		{render(entry)}
 		{"\n"}
 	{/each}

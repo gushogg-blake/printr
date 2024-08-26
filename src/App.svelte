@@ -14,16 +14,28 @@ setContext("log", log);
 
 let key = localStorage.getItem("key");
 
-if (!key) {
+function setUuid() {
 	key = crypto.randomUUID();
 	
 	localStorage.setItem("key", key);
+}
+
+if (!key) {
+	setUuid();
 }
 
 let postUrl = `https://tmwuc.gushogg-blake.com/print/${key}`;
 
 setContext("key", key);
 setContext("postUrl", postUrl);
+
+function resetUuid() {
+	setUuid();
+	
+	if (confirm("UUID reset. Reload now?")) {
+		location.reload();
+	}
+}
 </script>
 
 <svelte:head>
@@ -117,7 +129,7 @@ h1, h2, h3 {
 		<h2>Security</h2>
 		<ul>
 			<li>
-				Anyone with the UUID can listen to the logs.
+				Anyone with the UUID can listen to the logs (<a href="javascript:void(0)" on:click={resetUuid}>reset UUID</a>).
 				<br><br>
 			</li>
 			<li>

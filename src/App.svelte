@@ -155,7 +155,7 @@ h1, h2, h3 {
 				<a href="//gitlab.com/gushogg-blake/tmwuc">Frontend</a>
 			</li>
 			<li>
-				<a href="//gitlab.com/gushogg-blake/relay">WebSocket relay</a>
+				<a href="//gitlab.com/gushogg-blake/tmwuc-relay">WebSocket relay</a>
 			</li>
 		</ul>
 	</div>

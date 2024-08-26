@@ -5,6 +5,7 @@ import Rendered from "./Rendered.svelte";
 import Raw from "./Raw.svelte";
 
 let log = getContext("log");
+let key = getContext("key");
 
 let type = "rendered";
 

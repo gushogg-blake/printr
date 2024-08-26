@@ -102,7 +102,7 @@ onMount(function() {
 
 <div id="main">
 	{#each entries as entry (entry)}
-		{#if entry.isNewline}
+		{#if entry.type === "newline"}
 			<div
 				class="log newline"
 				style={inlineStyle(newlineStyle(entry))}
@@ -126,8 +126,11 @@ onMount(function() {
 				</div>
 				<div class="date">
 					{entry.date.toLocaleString()}
-					{#if entry.isManual}
+					{#if entry.type === "manual"}
 						(manual insertion)
+					{/if}
+					{#if entry.type === "system"}
+						(system message)
 					{/if}
 				</div>
 				<div class="data">

@@ -65,17 +65,23 @@ onMount(function() {
 		//log.on("update", onUpdate),
 	];
 	
-	webSocket(import.meta.env.VITE_WS_URL + "/ws/" + key, {
+	let wsUrl = import.meta.env.VITE_WS_URL + "/ws/" + key;
+	
+	webSocket(wsUrl, {
 		message({type, data}) {
 			handlers[type](data);
 		},
 		
 		async connected() {
 			connected = true;
+			
+			log.system("Connected to WebSocket relay: " + wsUrl + ".");
 		},
 		
 		disconnected() {
 			connected = false;
+			
+			log.system("Connection lost.");
 		},
 	});
 	

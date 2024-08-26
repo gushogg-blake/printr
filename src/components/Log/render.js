@@ -1,6 +1,8 @@
 export default function(entry) {
-	if (entry.isNewline) {
-		return "\n";
+	if (entry.type === "newline") {
+		return "\n".repeat(entry.height);
+	} else if (entry.type === "system") {
+		return entry.message;
 	}
 	
 	let str = entry.isJson ? JSON.stringify(entry.data, null, 4) : entry.data;

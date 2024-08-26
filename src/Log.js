@@ -11,11 +11,11 @@ class Log extends Evented {
 	addNewline() {
 		let entry = this.entries.at(-1);
 		
-		if (entry && entry.isNewline) {
+		if (entry && entry.type === "newline") {
 			entry.height++;
 		} else {
 			this.entries.push({
-				isNewline: true,
+				type: "newline",
 				height: 1,
 			});
 		}
@@ -26,7 +26,7 @@ class Log extends Evented {
 	
 	addManualEntry(str) {
 		this.entries.push({
-			isManual: true,
+			type: "manual",
 			data: str,
 			date: new Date(),
 			wrap: true,
@@ -39,12 +39,24 @@ class Log extends Evented {
 	receiveEntry(entry) {
 		this.entries.push({
 			...entry,
+			type: "relay",
 			date: new Date(),
 			wrap: true,
 		});
 		
 		this.fire("update");
 		this.fire("entryReceived");
+	}
+	
+	system(message) {
+		this.entries.push({
+			date: new Date(),
+			type: "system",
+			message,
+		});
+		
+		this.fire("update");
+		this.fire("systemMessageReceived");
 	}
 	
 	remove(entry) {

@@ -12,6 +12,8 @@ let renderers = {
 	raw: Raw,
 };
 
+let connected = false;
+
 let scroller;
 
 function isScrolledToBottom() {
@@ -48,6 +50,12 @@ async function onManualEntry() {
 	scroll();
 }
 
+let handlers = {
+	log(data) {
+		log.receiveEntry(data);
+	},
+};
+
 onMount(function() {
 	let teardown = [
 		log.on("entryReceived", onEntryReceived),
@@ -55,7 +63,19 @@ onMount(function() {
 		//log.on("update", onUpdate),
 	];
 	
-	
+	webSocket(import.meta.env.VITE_WS_URL + "/ws/" + key, {
+		message({type, data}) {
+			handlers[type](data);
+		},
+		
+		async connected() {
+			connected = true;
+		},
+		
+		disconnected() {
+			connected = false;
+		},
+	});
 	
 	return function() {
 		for (let fn of teardown) {
@@ -105,6 +125,27 @@ input[type="text"] {
 .spacer {
 	flex-grow: 1;
 }
+
+#connection {
+	display: inline-flex;
+	align-items: center;
+	margin-left: 1em;
+}
+
+#indicator {
+	$size: 9px;
+	
+	width: $size;
+	height: $size;
+	margin-right: .4em;
+	border-radius: 100px;
+	background: #B7B7B7;
+	
+	&.connected {
+		/*margin-right: 0;*/
+		background: #2e9404;
+	}
+}
 </style>
 
 <div id="main">
@@ -115,6 +156,10 @@ input[type="text"] {
 	</div>
 	<div id="input">
 		<input type="text" placeholder="Add notes or separators" on:keydown={onKeydown}/>
+		<div id="connection">
+			<div id="indicator" class:connected></div>
+			{connected ? "Connected" : "Connecting..."}
+		</div>
 		<div class="spacer"></div>
 		<div id="prefs">
 			<label>

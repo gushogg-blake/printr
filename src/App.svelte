@@ -25,30 +25,6 @@ let postUrl = `https://tmwuc.gushogg-blake.com/print/${key}`;
 
 setContext("key", key);
 setContext("postUrl", postUrl);
-
-let connected = false;
-
-let handlers = {
-	log(data) {
-		log.receiveEntry(data);
-	},
-};
-
-onMount(async function() {
-	webSocket(import.meta.env.VITE_WS_URL + "/ws/" + key, {
-		message({type, data}) {
-			handlers[type](data);
-		},
-		
-		async connected() {
-			connected = true;
-		},
-		
-		disconnected() {
-			connected = false;
-		},
-	});
-});
 </script>
 
 <svelte:head>

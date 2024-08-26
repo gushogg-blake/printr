@@ -115,7 +115,7 @@ h1, h2, h3 {
 					<br><br>
 				</li>
 				<li>
-					It's in a PHP API and you can't be bothered to figure out 1) how you get PHP to pretty-print stuff again; 2) where the webserver logs are; and then 3) to make sense of logs that are either all on one line, or multi-line logs where every line has a massive prefix of irrelevant fields.
+					It's in a PHP API and you can't be bothered to figure out 1) how you get PHP to pretty-print stuff again; 2) where the webserver logs are; and then 3) to make sense of logs that are all on one line.
 					<!--<br><br>-->
 				</li>
 			</ul>

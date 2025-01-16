@@ -1,3 +1,5 @@
+import wrap from "$utils/wrap";
+
 export default function(entry) {
 	if (entry.type === "newline") {
 		return "\n".repeat(entry.height);

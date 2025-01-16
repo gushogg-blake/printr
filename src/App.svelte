@@ -2,7 +2,6 @@
 import {onMount, tick, setContext} from "svelte";
 import sleep from "$utils/sleep";
 import {push, remove} from "$utils/arrayMethods";
-import wrap from "$utils/wrap";
 import inlineStyle from "$utils/dom/inlineStyle";
 import LangTabs from "$components/LangTabs.svelte";
 import {default as LogComponent} from "$components/Log/Log.svelte";

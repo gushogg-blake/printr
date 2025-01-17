@@ -23,7 +23,7 @@ if (!key) {
 	setUuid();
 }
 
-let postUrl = `https://tmwuc.gushogg-blake.com/print/${key}`;
+let postUrl = `${location.origin}/print/${key}`;
 
 setContext("key", key);
 setContext("postUrl", postUrl);

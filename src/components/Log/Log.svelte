@@ -15,7 +15,12 @@ let renderers = {
 };
 
 let connected = false;
-let entries = log.entries;
+let {entries, paths} = log;
+let filter = null;
+
+$: filteredEntries = entries.filter(function(entry) {
+	return !filter || entry.path === filter;
+});
 
 let scroller;
 let wasScrolledToBottomOnLastUpdate;
@@ -28,6 +33,10 @@ function isScrolledToBottom() {
 
 function scroll() {
 	scroller.scrollTop = scroller.scrollHeight;
+}
+
+function setFilter(path) {
+	filter = path;
 }
 
 function onKeydown(e) {
@@ -69,7 +78,7 @@ async function onManualEntry() {
 function onUpdate() {
 	wasScrolledToBottomOnLastUpdate = isScrolledToBottom(scroller);
 	
-	entries = log.entries;
+	({entries, paths} = log);
 }
 
 let handlers = {
@@ -177,12 +186,40 @@ input[type="text"] {
 		background: #2e9404;
 	}
 }
+
+#filter {
+	display: flex;
+	gap: .5em;
+	padding-bottom: .5em;
+}
+
+.filter {
+	border: none;
+	border-radius: 5px;
+	padding: .5em 1em;
+	cursor: pointer;
+	
+	&.selected {
+		color: white;
+		background: gray;
+	}
+}
 </style>
 
 <div id="main">
+	<div id="filter">
+		<button class="filter" class:selected={!filter} on:click={() => setFilter(null)}>
+			All
+		</button>
+		{#each paths as path}
+			<button class="filter" class:selected={filter === path} on:click={() => setFilter(path)}>
+				{path}
+			</button>
+		{/each}
+	</div>
 	<div id="log">
 		<div id="scroller" bind:this={scroller}>
-			<svelte:component this={renderers[type]} {entries}/>
+			<svelte:component this={renderers[type]} entries={filteredEntries}/>
 		</div>
 	</div>
 	<div id="input">

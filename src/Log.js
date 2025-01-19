@@ -6,6 +6,7 @@ class Log extends Evented {
 		super();
 		
 		this.entries = [];
+		this.paths = new Set(["/"]);
 	}
 	
 	addNewline() {
@@ -43,6 +44,8 @@ class Log extends Evented {
 			date: new Date(),
 			wrap: true,
 		});
+		
+		this.paths.add(entry.path);
 		
 		this.fire("update");
 		this.fire("entryReceived");

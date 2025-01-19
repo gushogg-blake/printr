@@ -54,6 +54,7 @@ a {
 	--boldBorderRadius: 4px;
 	
 	min-height: 100vh;
+	background: #f7f7f7;
 }
 
 #main {
@@ -62,7 +63,6 @@ a {
 	gap: 1em;
 	margin: 0 auto;
 	padding: 1em;
-	background: #f7f7f7;
 }
 
 h1, h2, h3 {
@@ -76,6 +76,7 @@ h1, h2, h3 {
 #title {
 	font-weight: bold;
 	padding: .5em;
+	background: white;
 }
 
 .col {
@@ -94,7 +95,7 @@ h1, h2, h3 {
 				<h2>About</h2>
 				<p> Quick and dirty logging for when <code>print()</code> is unavailable or unergonomic. Just send text or JSON to this server and see it below.
 				<h2>Usage</h2>
-				<p> Update code to send a POST request to <code>{postUrl}</code>.
+				<p> Update code to send a POST request to <code>{postUrl}</code>. Optionally, add <code>/your-custom-identifier</code> to the end of the URL to enable splitting logs.
 				<p> You can use your own code or one of the snippets below.
 				<h2>How it works</h2>
 				<p> When you load this page, the frontend generates a local UUID, stores it in <code>localStorage</code>, and uses it to connect to a WebSocket relay server.

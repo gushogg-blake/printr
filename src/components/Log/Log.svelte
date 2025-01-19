@@ -19,7 +19,7 @@ let {entries, paths} = log;
 let filter = null;
 
 $: filteredEntries = entries.filter(function(entry) {
-	return !filter || entry.path === filter;
+	return entry.type !== "relay" || !filter || entry.path === filter;
 });
 
 let scroller;

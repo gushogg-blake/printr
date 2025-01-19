@@ -22,6 +22,7 @@ function selectTab(tab) {
 	cursor: pointer;
 	
 	&.selected {
+		text-decoration: underline;
 		background: white;
 	}
 }

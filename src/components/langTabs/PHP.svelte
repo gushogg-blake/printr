@@ -6,40 +6,40 @@ let key = getContext("key");
 let postUrl = getContext("postUrl");
 
 let code = dedent(`
-	$tmwucUrl = "${postUrl}";
+	$printrUrl = "${postUrl}";
 	
-	function tmwuc($data) {
-		global $tmwucUrl;
+	function printr($data) {
+		global $printrUrl;
 		$isScalar = is_scalar($data);
 		$contentType = $isScalar ? "text/plain" : "application/json";
-		echo "curl -H \\"Content-Type: $contentType\\" --data-binary @- $tmwucUrl", "w";
-		$curl = popen("curl -H \\"Content-Type: $contentType\\" --data-binary @- $tmwucUrl", "w");
+		echo "curl -H \\"Content-Type: $contentType\\" --data-binary @- $printrUrl", "w";
+		$curl = popen("curl -H \\"Content-Type: $contentType\\" --data-binary @- $printrUrl", "w");
 		fwrite($curl, $isScalar ? $data : json_encode($data));
 		fclose($curl);
 	}
 	
-	tmwuc(["test" => 123]);
+	printr(["test" => 123]);
 	
 	// debug_backtrace() output isn't always serialisable, so use this for traces:
 	
-	function tmwuc_trace($e=null) {
-		global $tmwucUrl;
+	function printr_trace($e=null) {
+		global $printrUrl;
 		if (!$e) {
 			$e = new Exception;
 		}
-		$curl = popen("curl --data-binary @- $tmwucUrl", "w");
+		$curl = popen("curl --data-binary @- $printrUrl", "w");
 		fwrite($curl, $e->getTraceAsString());
 		fclose($curl);
 	}
 	
 	// set the global error and exception handlers:
 	
-	function tmwuc_error_handler($errNo, $message, $file, $line, $context) {
+	function printr_error_handler($errNo, $message, $file, $line, $context) {
 		// Respects error_reporting and @ operator
 		if (!(error_reporting() & $errNo)) {
 			return;
 		}
-		tmwuc([
+		printr([
 			"message" => $message,
 			"errNo" => $errNo,
 			"file" => $file,
@@ -49,12 +49,12 @@ let code = dedent(`
 		]);
 	}
 	
-	function tmwuc_exception_handler($e) {
-		tmwuc($e->getMessage() . "\\n\\n" . $e->getTraceAsString());
+	function printr_exception_handler($e) {
+		printr($e->getMessage() . "\\n\\n" . $e->getTraceAsString());
 	}
 	
-	set_error_handler("tmwuc_error_handler");
-	set_exception_handler("tmwuc_exception_handler");
+	set_error_handler("printr_error_handler");
+	set_exception_handler("printr_exception_handler");
 `);
 </script>
 

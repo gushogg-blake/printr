@@ -6,13 +6,13 @@ let key = getContext("key");
 let postUrl = getContext("postUrl");
 
 let code = dedent(`
-	tmwucurl="${postUrl}"
+	printrurl="${postUrl}"
 	
-	function tmwuc {
-		curl -d "$1" "$tmwucurl"
+	function printr {
+		curl -d "$1" "$printrurl"
 	}
 	
-	tmwuc test
+	printr test
 `);
 </script>
 

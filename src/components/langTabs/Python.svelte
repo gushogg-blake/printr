@@ -5,12 +5,12 @@ import dedent from "$utils/dedent";
 let postUrl = getContext("postUrl");
 
 let code = dedent(`
-	def tmwuc(obj):
+	def printr(obj):
 		import requests
 		url = '${postUrl}'
 		requests.post(url, json = obj)
 	
-	tmwuc({"test": 123})
+	printr({"test": 123})
 `);
 </script>
 

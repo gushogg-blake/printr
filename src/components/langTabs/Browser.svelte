@@ -6,9 +6,7 @@ let key = getContext("key");
 let postUrl = getContext("postUrl");
 
 let code = dedent(`
-	// useful for e.g. phones
-	
-	function tmwuc(data) {
+	function printr(data) {
 		return fetch("${postUrl}", {
 			method: "POST",
 			headers: {
@@ -27,7 +25,7 @@ let code = dedent(`
 			fn.apply(console, messages);
 	
 			for (let message of messages) {
-				tmwuc({
+				printr({
 					type: n,
 					message,
 				});
@@ -35,7 +33,7 @@ let code = dedent(`
 		};
 	}
 	
-	console.log({test: 123}); // appears in console and tmwuc
+	console.log({test: 123}); // appears in console and log
 `);
 </script>
 
@@ -43,4 +41,4 @@ let code = dedent(`
 
 </style>
 
-<pre class="language-php"><code>{@html code}</code></pre>
+<pre class="language-javascript"><code>{@html code}</code></pre>

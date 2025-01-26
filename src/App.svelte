@@ -92,14 +92,14 @@ h1, h2, h3 {
 				<p> Update code to send a POST request to <code>{postUrl}</code>. Optionally, add <code>/your-custom-identifier</code> to the end of the URL to enable splitting logs.
 				<p> You can use your own code or one of the snippets below.
 				<h2>How it works</h2>
-				<p> When you load this page, the frontend generates a local UUID, stores it in <code>localStorage</code>, and uses it to connect to a WebSocket relay server.
-				<p> The WebSocket relay server listens for POST requests at <code>/print/[uuid]</code> and relays log entries to all clients connected with that UUID.
+				<p> When you load this page, the frontend generates a UUID, performs a redirect to add it the URL, and uses it to connect to a WebSocket relay server.
+				<p> The relay server listens for POST requests at <code>/print/[uuid]</code> and relays log entries to all clients connected with that UUID.
 				<p> Logs are not stored anywhere; reloading the page clears the log.
 				<p> To separate out logs within a session for clarity, you can press Enter or optionally write a message in the input box below the log.
 				<h2>Security</h2>
 				<ul>
 					<li>
-						Anyone with the UUID can listen to the logs (<a href="javascript:void(0)" on:click={setUuid}>change UUID</a>).
+						Anyone with the UUID can listen to the logs (<a href="javascript:void(0)" on:click={setUuid}>generate new UUID</a>).
 						<br><br>
 					</li>
 					<li>
@@ -112,7 +112,7 @@ h1, h2, h3 {
 						<a href="//github.com/gushogg-blake/tmwuc">Frontend</a>
 					</li>
 					<li>
-						<a href="//github.com/gushogg-blake/tmwuc-relay">WebSocket relay</a>
+						<a href="//github.com/gushogg-blake/tmwuc-relay">Relay</a>
 					</li>
 				</ul>
 			</div>

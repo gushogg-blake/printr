@@ -105,7 +105,7 @@ onMount(function() {
 		async connected() {
 			connected = true;
 			
-			log.system("Connected to WebSocket relay: " + wsUrl + ".");
+			log.system("Connected to relay: " + wsUrl + ".");
 		},
 		
 		disconnected() {

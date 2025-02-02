@@ -10,6 +10,8 @@ import Log from "./Log";
 
 let log = new Log();
 
+let main;
+
 setContext("log", log);
 
 function getKeyFromUrl() {
@@ -30,6 +32,10 @@ let postUrl = `${import.meta.env.VITE_POST_URL}/print/${key}`;
 
 setContext("key", key);
 setContext("postUrl", postUrl);
+
+onMount(function() {
+	Prism.highlightAllUnder(main);
+});
 </script>
 
 <svelte:head>
@@ -77,13 +83,20 @@ h1, h2, h3 {
 	//margin: 0 auto;
 	max-width: 900px;
 }
+
+#copy {
+	border: var(--boldBorder);
+	border-radius: var(--boldBorderRadius);
+	padding: 1em;
+	background: white;
+}
 </style>
 
 <div id="wrapper">
 	<div id="title">
 		printr
 	</div>
-	<div id="main">
+	<div id="main" bind:this={main}>
 		<Section title="About">
 			<div class="col">
 				<h2>About</h2>
@@ -134,6 +147,9 @@ h1, h2, h3 {
 		<Section title="Snippets" defaultExpand>
 			<LangTabs/>
 		</Section>
+		<div id="copy">
+			<pre class="language-plaintext"><code class="language-plaintext">{postUrl}</code></pre>
+		</div>
 		<div id="log">
 			<LogComponent/>
 		</div>

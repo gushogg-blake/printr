@@ -30,6 +30,13 @@ pre {
 	background: #ffffff;
 }
 
-.toolbar-item span {
-	box-shadow: none !important;
+.toolbar {
+	line-height: 1 !important;
+	top: 0 !important;
+	
+	.toolbar-item {
+		span {
+			box-shadow: none !important;
+		}
+	}
 }
